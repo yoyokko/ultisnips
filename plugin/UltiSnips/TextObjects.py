@@ -842,6 +842,20 @@ class SnippetUtil(object):
         """ Same as shift. """
         self.shift(other)
 
+    @property
+    def comments(self):
+        """ Returns comments list [left, right] if using NERDCommenter """
+        if vim.eval("exists('b:NERDCommenterDelims')"):
+            left, right = [vim.eval("b:NERDCommenterDelims[%s]" % repr(pos)) for pos in 'left', 'right']
+            if left: left += ' '
+            if right: right = ' ' + right
+            return [left, right]
+        else:
+            return ["", ""]
+
+    def comment(self, index):
+        """ Sets instance return value to comments[index] """
+        self.rv = self.comments[index]
 
 class PythonCode(TextObject):
     def __init__(self, parent, start, end, code, indent=""):
