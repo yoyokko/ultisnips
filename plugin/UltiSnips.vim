@@ -15,7 +15,6 @@ if !exists("g:UltiSnipsUsePythonVersion")
     let g:_uspy=":py3 "
     if !has("python3")
         if !has("python")
-            echo  "UltiSnips requires py >= 2.6 or any py3"
             finish
         endif
         let g:_uspy=":py "

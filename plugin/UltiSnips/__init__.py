@@ -22,16 +22,7 @@ def err_to_scratch_buffer(f):
         try:
             return f(self, *args, **kwds)
         except:
-            s = \
-"""An error occured. This is either a bug in UltiSnips or a bug in a
-snippet definition. If you think this is a bug, please report it to
-https://bugs.launchpad.net/ultisnips/+filebug.
-
-Following is the full stack trace:
-"""
-            s += traceback.format_exc()
-            self.leaving_buffer() # Vim sends no WinLeave msg here.
-            _vim.new_scratch_buffer(s)
+            vim.command('let @u = "%s"' % traceback.format_exc().replace('"', '\\"'))
     return wrapper
 
 class _SnippetDictionary(object):
@@ -228,7 +219,9 @@ class _SnippetsFileParser(object):
             elif head in ("snippet", "global"):
                 self._parse_snippet()
             elif head == "clearsnippets":
-                self._sm.clear_snippets(tail.split(), self._ft)
+                triggers = tail.split()
+                self._sm.clear_snippets(triggers, self._ft)
+                self._sm.clear_snippets(triggers, "all")
             elif head and not head.startswith('#'):
                 self._error("Invalid line %r" % self._line().rstrip())
                 break
