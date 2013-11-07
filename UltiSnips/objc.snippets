@@ -6,12 +6,74 @@ snippet imp "#import (imp)" b
 #import "${1:`!p snip.rv = re.sub(r'\..*$', '.h', fn)`}"
 endsnippet
 
+snippet if "if () {}"
+if (${1:condition})
+{
+	${2:statement}
+}
+endsnippet
+
+snippet defb "typedef block"
+typedef ${1:returnType} (^${2:TypeName})(${3:parameterTypes});
+endsnippet
+
+snippet disam "dispatch_async_main"
+dispatch_async(dispatch_get_main_queue(), ^{
+	${1:statements}
+};
+endsnippet
+
+snippet disab "dispatch_async_background"
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+	${1:statements}
+};
+endsnippet
+
+snippet enum "NS_ENUM def"
+typedef NS_ENUM(${1:type}, ${2:name}) 
+{
+    ${3:enumname} = ${4:enumvalue},
+};
+endsnippet
+
 snippet Imp "#import <> (Imp)"
 #import <${1:Cocoa/Cocoa.h}>
 endsnippet
 
+snippet clh "Class Header"
+@interface ${1:`!p
+if len(fn):
+   snip.rv = re.sub(r'\..*$', '', fn)
+else:
+   snip.rv = "object"
+`} : ${2:NSObject}
+{
+}
+@end
+endsnippet
+
+snippet clm "Class Implementation"
+@implementation ${1:`!p
+if len(fn):
+   snip.rv = re.sub(r'\..*$', '', fn)
+else:
+   snip.rv = "object"
+`} 
+
+- (id) init
+{
+	self = [super init];
+	if (self)
+	{$0
+	}
+	return self;
+}
+
+@end
+endsnippet
+
 snippet cl "020 Class (objc)"
-@interface ${1:`!p 
+@interface ${1:`!p
 if len(fn):
    snip.rv = re.sub(r'\..*$', '', fn)
 else:
@@ -22,9 +84,10 @@ else:
 @end
 
 @implementation $1
-- (id)init
+- (id) init
 {
-	if((self = [super init]))
+	self = [super init];
+	if (self)
 	{$0
 	}
 	return self;
@@ -41,7 +104,7 @@ NSMutableDictionary *${1:dict} = [NSMutableDictionary dictionary];
 endsnippet
 
 snippet forarray "for NSArray loop (forarray)"
-unsigned int	${1:object}Count = [${2:array} count];
+unsigned int ${1:object}Count = [${2:array} count];
 
 for(unsigned int index = 0; index < $1Count; index += 1)
 {
@@ -50,13 +113,13 @@ for(unsigned int index = 0; index < $1Count; index += 1)
 }
 endsnippet
 
-snippet objacc "Object Accessors (objacc)"
-- (${1:id})${2:thing}
+snippet objacc "Object Accessors Implementation (objacc)"
+- (${1:id}) ${2:thing}
 {
 	return $2;
 }
 
-- (void)set${2/./\u$0/}:($1)aValue
+- (void) set${2/./\u$0/}:($1) aValue
 {
 	$0${1/( \*)?$/(?1:$1: )/}old${2/./\u$0/} = $2;
 	$2 = [aValue retain];
@@ -118,7 +181,7 @@ snippet arracc "LoD array (arracc)"
 	[${3:${1/./\l$0/}} addObject:anObject];
 }
 
-- (void)insertObject:($2)anObject in$1AtIndex:(unsigned int)i 
+- (void)insertObject:($2)anObject in$1AtIndex:(unsigned int)i
 {
 	[$3 insertObject:anObject atIndex:i];
 }
@@ -189,7 +252,7 @@ if(choice == NSAlertDefaultReturn) // "$3"
 }
 else if(choice == NSAlertAlternateReturn) // "$4"
 {
-	
+
 }
 endsnippet
 
@@ -198,8 +261,8 @@ snippet format "NSString stringWithFormat (format)"
 endsnippet
 
 snippet objacc "Object Accessors Interface (objacc)"
-- (${1:id})${2:thing};
-- (void)set${2/./\u$0/}:($1)aValue;
+- (${1:id}) ${2:thing};
+- (void) set${2/./\u$0/}:($1) aValue;
 endsnippet
 
 snippet prop "Property"
