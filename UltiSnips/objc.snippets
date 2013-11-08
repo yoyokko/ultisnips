@@ -13,6 +13,17 @@ if (${1:condition})
 }
 endsnippet
 
+snippet - "- (returnType) methodName;"
+- (${1:returnType}) ${2:methodName};
+endsnippet
+
+snippet -m "- (returnType) methodName {}"
+- (${1:returnType}) ${2:methodName}
+{
+	$0
+}
+endsnippet
+
 snippet defb "typedef block"
 typedef ${1:returnType} (^${2:TypeName})(${3:parameterTypes});
 endsnippet
